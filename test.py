@@ -7,7 +7,7 @@ from sys import byteorder
 from array import array
 from struct import pack
 from sklearn.ensemble import GradientBoostingClassifier, BaggingClassifier
-
+import keyboard
 from utils import get_best_estimators
 
 THRESHOLD = 500
@@ -96,7 +96,8 @@ def record():
         elif not silent and not snd_started:
             snd_started = True
 
-        if snd_started and num_silent > SILENCE:
+        if (snd_started and num_silent > SILENCE) or keyboard.is_pressed('q'):
+            print("\nqqRecording stopped.")
             break
 
     sample_width = p.get_sample_size(FORMAT)
@@ -155,7 +156,7 @@ if __name__ == "__main__":
     detector = EmotionRecognizer(estimator_dict[args.model], emotions=args.emotions.split(","), features=features, verbose=0)
     detector.train()
     print("Test accuracy score: {:.3f}%".format(detector.test_score()*100))
-    print("Please talk")
+    print("Please talk...... Press 'q' to stop.")
     
     filename = "test.wav"
     record_to_file(filename)
